@@ -39,6 +39,7 @@ public class UniversalComparer<T> implements Comparator<T> {
         Class classTwo = o2.getClass();
         try {
             for (FieldSort fieldSort : getFieldSorts()) {
+                if (fieldSort.getNameField().isEmpty()) return 0;
                 if (fieldSort.getNameField().contains(".")) {
                     String className = fieldSort.getNameField().split("\\.")[0].trim();
                     if (classOne.getDeclaredField(className).get(o1) != null && classTwo.getDeclaredField(className).get(o2) != null) {
@@ -70,8 +71,8 @@ public class UniversalComparer<T> implements Comparator<T> {
                     continue;
                 }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException ex) {
+            System.err.println(ex);
         }
         return 0;
     }
@@ -86,8 +87,6 @@ public class UniversalComparer<T> implements Comparator<T> {
                 fieldSorts.add(new FieldSort(splitFiels[0], false));
             } else if (splitFiels[1].toLowerCase().equals("desc")) {
                 fieldSorts.add(new FieldSort(splitFiels[0], true));
-            } else {
-                System.out.println("EXCEPTION");
             }
         }
         setFieldSorts(fieldSorts);
