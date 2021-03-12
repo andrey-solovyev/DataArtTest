@@ -9,15 +9,17 @@ import java.util.Comparator;
 
 /**
  * Класс UniversalComparer <b>expression</b>, <b>checkNull</b>, <b>fieldSorts</b>.
- * Данный класс предназначен для тестов, ведь у нас универсальный компаратор
- *
+ * Данный класс предназначен для компаратора
  * @autor Андрей Соловьем
  */
 
 @Data
 public class UniversalComparer<T> implements Comparator<T> {
+    /**Поле строка**/
     private String expression;
+    /**Поле проверка на null**/
     private Boolean checkNull;
+    /**Поля для сравнения последовательно**/
     private ArrayList<FieldSort> fieldSorts;
 
     public UniversalComparer(String expression) {
@@ -31,7 +33,7 @@ public class UniversalComparer<T> implements Comparator<T> {
         this.checkNull = checkNull;
         parseFields();
     }
-
+    /**Основной метод для работы**/
     public int compare(T o1, T o2) {
         Class classOne = o1.getClass();
         Class classTwo = o2.getClass();
@@ -73,7 +75,7 @@ public class UniversalComparer<T> implements Comparator<T> {
         }
         return 0;
     }
-
+    /**Парсер строки**/
     private void parseFields() {
         ArrayList<FieldSort> fieldSorts = new ArrayList<FieldSort>();
         String[] fields = getExpression().split("[,]+");
