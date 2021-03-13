@@ -10,16 +10,23 @@ import java.util.Comparator;
 /**
  * Класс UniversalComparer <b>expression</b>, <b>checkNull</b>, <b>fieldSorts</b>.
  * Данный класс предназначен для компаратора
+ *
  * @autor Андрей Соловьем
  */
 
 @Data
 public class UniversalComparer<T> implements Comparator<T> {
-    /**Поле строка**/
+    /**
+     * Поле строка
+     **/
     private String expression;
-    /**Поле проверка на null**/
+    /**
+     * Поле проверка на null
+     **/
     private Boolean checkNull;
-    /**Поля для сравнения последовательно**/
+    /**
+     * Поля для сравнения последовательно
+     **/
     private ArrayList<FieldSort> fieldSorts;
 
     public UniversalComparer(String expression) {
@@ -33,7 +40,10 @@ public class UniversalComparer<T> implements Comparator<T> {
         this.checkNull = checkNull;
         parseFields();
     }
-    /**Основной метод для работы**/
+
+    /**
+     * Основной метод для работы
+     **/
     public int compare(T o1, T o2) {
         Class classOne = o1.getClass();
         Class classTwo = o2.getClass();
@@ -60,6 +70,8 @@ public class UniversalComparer<T> implements Comparator<T> {
                 Field fieldClassTwo = classTwo.getDeclaredField(fieldSort.getNameField());
                 fieldClassOne.setAccessible(true);
                 fieldClassTwo.setAccessible(true);
+                if (!(fieldClassOne.get(o1) instanceof Comparable) || !(fieldClassTwo.get(o2) instanceof Comparable))
+                    throw new IllegalArgumentException("List cannot be sorted");
                 Comparable c1 = (Comparable) fieldClassOne.get(o1);
                 Comparable c2 = (Comparable) fieldClassTwo.get(o2);
                 int result = c1.compareTo(c2);
@@ -76,7 +88,10 @@ public class UniversalComparer<T> implements Comparator<T> {
         }
         return 0;
     }
-    /**Парсер строки**/
+
+    /**
+     * Парсер строки
+     **/
     private void parseFields() {
         ArrayList<FieldSort> fieldSorts = new ArrayList<FieldSort>();
         String[] fields = getExpression().split("[,]+");
